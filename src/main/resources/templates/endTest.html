@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-md-auto">
+            <h1 class="h2">ТЕСТ ОКОНЧЕН!</h1>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-md-auto">
+            <h1 class="h3" th:text="${result}">0 из 10</h1>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-md-auto">
+            <h1 class="h6" th:text="${msg}">Тест окончен</h1>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col col-md-auto" style="margin: 30px">
+            <a href="/">
+                <button>На главную</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
