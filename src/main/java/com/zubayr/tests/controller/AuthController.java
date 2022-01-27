@@ -13,16 +13,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class AuthController {
@@ -46,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute AuthUserDto dto, ServletResponse response, ServletRequest request){
+    public String login(@ModelAttribute AuthUserDto dto, ServletResponse response){
         String username = dto.getUsername();
         String password = dto.getPassword();
         Optional<User> optionalUser = userRepository.findByUserName(username);
@@ -64,32 +65,36 @@ public class AuthController {
             Cookie cookie = new Cookie("Authorization", token);
             ((HttpServletResponse)response).addCookie(cookie);
 
-
             return "redirect:/";
         } catch (AuthenticationException e){
             e.printStackTrace();
-            return "auth";
+            return "redirect:/auth";
         }
     }
 
 
     @GetMapping("/regis")
-    public String regisPage(){
+    public String regisPage(Model model){
+        Set<String> roles = Set.of(Role.STUDENT.name(), Role.TEACHER.name(), Role.ADMIN.name());
+        model.addAttribute("roles", roles);
         return "regis";
     }
 
     @PostMapping("/regis")
-    public String regis(@ModelAttribute RegisUserDto dto){
+    public String regis(@ModelAttribute RegisUserDto dto, ServletResponse response){
         if (userRepository.findByUserName(dto.getLogin()).isEmpty()){
             User user = new User();
             user.setUserName(dto.getLogin());
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
             user.setFullName(String.join(" ", dto.getSurname() , dto.getName(), dto.getPatronymic()));
-            user.setRole(Role.STUDENT);
+            user.setRole(Role.valueOf(dto.getRole()));
             user.setIsBlocked(false);
             userRepository.save(user);
         }
-        return "home";
+        AuthUserDto authUserDto = new AuthUserDto();
+        authUserDto.setUsername(dto.getLogin());
+        authUserDto.setPassword(dto.getPassword());
+        return login(authUserDto, response);
     }
 
 }

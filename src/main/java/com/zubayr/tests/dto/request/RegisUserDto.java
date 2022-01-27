@@ -11,6 +11,8 @@ public class RegisUserDto {
 
     private String patronymic;
 
+    private String role;
+
     private String login;
 
     private String password;
